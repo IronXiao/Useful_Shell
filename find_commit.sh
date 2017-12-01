@@ -13,7 +13,6 @@ REPOS=$(repo forall -c pwd)
 for path in $REPOS
 do
 	pushd $path > /dev/null
-#        echo "Searching commits that match "$MSG" in "${path#*$LOCAL_DIR}" ..."
         COMMITS=($(git log --pretty=format:"%H" --grep=$MSG))
         j=${#COMMITS[@]}
         if [ $j -gt 0 ]; then
@@ -38,28 +37,22 @@ do
                         fi
 		      echo -e '\t'$commit >> $COMMIT_DIR/commits.txt
                         if [ $k -eq $n ]; then
-#                           echo -e '\n'
                            echo -e '\n' >> $COMMIT_DIR/commits.txt
                         fi
-#                      echo "Generating "$[k+1]"th commit in "${path#*$LOCAL_DIR\/}
 		      mv $(git format-patch -1 $commit --no-commit-id) $COMMIT_OUT_PATCH/$PATCH_NAME
 	              FILES=$(git diff-tree -r --no-commit-id --name-only $commit)
-#                            echo "Copying source file in "${path#*$LOCAL_DIR\/}
 		            for file in $FILES
 				do
-#                                echo "cp "${file#*$path}" "${COMMIT_OUT_SOURCE#*$LOCAL_DIR\/}
 				cp --parents $file $COMMIT_OUT_SOURCE
                                 done
 		     let i--
                      let k++
           done
-#          else
-#              echo "No related commit found in "${path#*$LOCAL_DIR}" !"
           fi
 	popd > /dev/null
 done
+echo -e "\n"
 if [ -f $COMMIT_DIR/commits.txt ]; then
-   echo -e "\n"
    echo "All patch and source code generated in dictory "${COMMIT_DIR#*$LOCAL_DIR\/}
 else
    echo "No commit found that match commit_msg: "$MSG
