@@ -57,6 +57,9 @@ public class NtpTest {
             System.out.println("originateTime: " + originateTime);
             System.out.println("receiveTime: " + receiveTime);
             System.out.println("transmitTime: " + transmitTime);
+			String formats = "yyyy-MM-dd HH:mm:ss";
+			String date = new SimpleDateFormat(formats, Locale.CHINA).format(new Date(receiveTime));
+			System.out.println("Current time is: " + date);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
